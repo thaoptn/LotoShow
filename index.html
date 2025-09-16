@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lấy Phiếu Lô Tô Online</title>
+    <title>Lô Tô Online - Giới Hạn Thông Minh</title>
     <style>
         * {
             margin: 0;
@@ -81,9 +81,82 @@
             z-index: 1;
         }
         
+        .status-bar {
+            background: #34495e;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .online-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
         .content {
             padding: 40px 30px;
             text-align: center;
+        }
+        
+        .limits-info {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border: 2px solid #f39c12;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .limits-info::before {
+            content: '⚡';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            opacity: 0.3;
+        }
+        
+        .limits-info h3 {
+            color: #d35400;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .limit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f39c12;
+        }
+        
+        .limit-item:last-child {
+            border-bottom: none;
+        }
+        
+        .limit-value {
+            font-weight: bold;
+            color: #d35400;
         }
         
         .get-ticket-btn {
@@ -101,15 +174,35 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .get-ticket-btn:hover {
+        .get-ticket-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 12px 25px rgba(243, 156, 18, 0.4);
         }
         
-        .get-ticket-btn:active {
-            transform: translateY(-1px);
+        .get-ticket-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(52, 73, 94, 0.8);
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 50px;
         }
         
         .instructions {
@@ -132,6 +225,18 @@
         
         .instructions li {
             margin-bottom: 8px;
+        }
+        
+        .warning {
+            background: #ffe6e6;
+            border: 2px solid #e74c3c;
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
         
         .ticket-container {
@@ -270,11 +375,6 @@
             font-size: 14px;
         }
         
-        .btn-new {
-            background: linear-gradient(45deg, #27ae60, #229954);
-            color: white;
-        }
-        
         .btn-save {
             background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
@@ -291,10 +391,29 @@
         }
         
         .stats {
-            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin: 20px 0;
-            color: #7f8c8d;
-            font-size: 14px;
+        }
+        
+        .stat-item {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
         }
         
         .loading {
@@ -337,6 +456,26 @@
                 height: 35px;
                 font-size: 14px;
             }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            border-radius: 3px;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
@@ -344,22 +483,57 @@
     <div class="app-container">
         <div class="header">
             <h1>🎯 Lô Tô Online</h1>
-            <p>Lấy phiếu chơi điện tử miễn phí</p>
+            <p>Phiên bản thông minh - Chống spam</p>
+        </div>
+        
+        <div class="status-bar">
+            <div class="online-count">
+                <div class="pulse-dot"></div>
+                <span>Online: <span id="onlineCount">1</span></span>
+            </div>
+            <div>Phiên: <span id="sessionId">-</span></div>
         </div>
         
         <div class="content">
-            <button class="get-ticket-btn" onclick="getNewTicket()">
-                🎲 Lấy Phiếu Lô Tô
-            </button>
+            <div class="limits-info">
+                <h3>🛡️ Giới Hạn Thông Minh</h3>
+                <div class="limit-item">
+                    <span>Tối đa phiếu/phiên:</span>
+                    <span class="limit-value">5 phiếu</span>
+                </div>
+                <div class="limit-item">
+                    <span>Thời gian chờ:</span>
+                    <span class="limit-value">30 giây</span>
+                </div>
+                <div class="limit-item">
+                    <span>Đã sử dụng:</span>
+                    <span class="limit-value"><span id="usedTickets">0</span>/5</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="get-ticket-btn" onclick="getNewTicket()" id="getTicketBtn">
+                <span id="btnText">🎲 Lấy Phiếu Lô Tô</span>
+                <div class="cooldown-overlay" id="cooldownOverlay">
+                    ⏱️ <span id="cooldownTimer">30</span>s
+                </div>
+            </div>
+            
+            <div class="warning" id="limitWarning">
+                🚫 Bạn đã sử dụng hết 5 phiếu cho phiên này!<br>
+                <small>Refresh trang để bắt đầu phiên mới</small>
+            </div>
             
             <div class="instructions">
-                <h3>📋 Hướng dẫn:</h3>
+                <h3>📋 Hướng dẫn & Quy tắc:</h3>
                 <ul>
-                    <li>Click nút "Lấy Phiếu Lô Tô" để nhận phiếu mới</li>
+                    <li>Mỗi người tối đa <strong>5 phiếu/phiên</strong></li>
+                    <li>Phải chờ <strong>30 giây</strong> giữa các lần lấy phiếu</li>
+                    <li>Refresh trang để bắt đầu phiên mới</li>
                     <li>Mỗi phiếu có 12 số từ 1-60, chia 6 cột</li>
-                    <li>Mỗi hàng có đúng 4 số, 2 ô trống</li>
                     <li>Lưu ảnh phiếu để so kết quả sau</li>
-                    <li>Có thể lấy nhiều phiếu khác nhau</li>
                 </ul>
             </div>
             
@@ -388,50 +562,194 @@
                     
                     <div class="ticket-footer">
                         <div>🍀 Chúc bạn may mắn! 🍀</div>
-                        <div>Phiếu điện tử - Không cần in giấy</div>
+                        <div>Phiếu điện tử - Chống spam thông minh</div>
                     </div>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-new" onclick="getNewTicket()">🔄 Phiếu Mới</button>
                     <button class="btn btn-save" onclick="saveTicket()">💾 Lưu Ảnh</button>
                     <button class="btn btn-share" onclick="shareTicket()">📤 Chia Sẻ</button>
                 </div>
             </div>
             
-            <div class="stats" id="stats">
-                Đã tạo: <span id="ticketCount">0</span> phiếu
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Phiếu đã tạo</div>
+                    <div class="stat-value" id="ticketCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Phiếu còn lại</div>
+                    <div class="stat-value" id="remainingTickets">5</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let ticketCounter = 0;
-        let currentTicketData = null;
+        // Cấu hình giới hạn
+        const CONFIG = {
+            MAX_TICKETS_PER_SESSION: 5,
+            COOLDOWN_TIME: 30, // giây
+            MAX_DAILY_TICKETS: 20 // có thể mở rộng sau
+        };
+
+        // Trạng thái ứng dụng
+        let gameState = {
+            sessionId: generateSessionId(),
+            ticketsUsed: 0,
+            lastTicketTime: 0,
+            cooldownActive: false,
+            currentTicketData: null
+        };
+
+        // Khởi tạo khi load trang
+        function initializeApp() {
+            // Tạo session ID
+            document.getElementById('sessionId').textContent = gameState.sessionId;
+            
+            // Mô phỏng số người online (random)
+            updateOnlineCount();
+            setInterval(updateOnlineCount, 15000);
+            
+            // Khôi phục trạng thái từ sessionStorage
+            restoreGameState();
+            
+            // Cập nhật UI
+            updateUI();
+            
+            // Auto-generate ticket đầu tiên nếu chưa có
+            if (gameState.ticketsUsed === 0) {
+                setTimeout(() => {
+                    if (gameState.ticketsUsed === 0) {
+                        getNewTicket();
+                    }
+                }, 1500);
+            }
+        }
+
+        function generateSessionId() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function updateOnlineCount() {
+            // Mô phỏng số người online (25-150)
+            const count = Math.floor(Math.random() * 125) + 25;
+            document.getElementById('onlineCount').textContent = count;
+        }
+
+        function saveGameState() {
+            sessionStorage.setItem('lotoGameState', JSON.stringify(gameState));
+        }
+
+        function restoreGameState() {
+            const saved = sessionStorage.getItem('lotoGameState');
+            if (saved) {
+                try {
+                    const parsedState = JSON.parse(saved);
+                    // Chỉ khôi phục một số trạng thái, không phải tất cả
+                    gameState.ticketsUsed = parsedState.ticketsUsed || 0;
+                    gameState.lastTicketTime = parsedState.lastTicketTime || 0;
+                } catch (e) {
+                    console.log('Không thể khôi phục trạng thái');
+                }
+            }
+        }
+
+        function canGetNewTicket() {
+            // Kiểm tra giới hạn số phiếu
+            if (gameState.ticketsUsed >= CONFIG.MAX_TICKETS_PER_SESSION) {
+                return { canGet: false, reason: 'limit' };
+            }
+            
+            // Kiểm tra cooldown
+            const now = Date.now();
+            const timeSinceLastTicket = (now - gameState.lastTicketTime) / 1000;
+            
+            if (timeSinceLastTicket < CONFIG.COOLDOWN_TIME && gameState.ticketsUsed > 0) {
+                return { 
+                    canGet: false, 
+                    reason: 'cooldown',
+                    remainingTime: CONFIG.COOLDOWN_TIME - Math.floor(timeSinceLastTicket)
+                };
+            }
+            
+            return { canGet: true };
+        }
+
+        function startCooldown(remainingTime) {
+            gameState.cooldownActive = true;
+            const btn = document.getElementById('getTicketBtn');
+            const overlay = document.getElementById('cooldownOverlay');
+            const timer = document.getElementById('cooldownTimer');
+            
+            btn.style.pointerEvents = 'none';
+            overlay.style.display = 'flex';
+            
+            const countdown = setInterval(() => {
+                remainingTime--;
+                timer.textContent = remainingTime;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(countdown);
+                    gameState.cooldownActive = false;
+                    btn.style.pointerEvents = 'auto';
+                    overlay.style.display = 'none';
+                    updateUI();
+                }
+            }, 1000);
+        }
+
+        function updateUI() {
+            // Cập nhật số phiếu đã dùng
+            document.getElementById('usedTickets').textContent = gameState.ticketsUsed;
+            document.getElementById('ticketCount').textContent = gameState.ticketsUsed;
+            document.getElementById('remainingTickets').textContent = CONFIG.MAX_TICKETS_PER_SESSION - gameState.ticketsUsed;
+            
+            // Cập nhật progress bar
+            const progress = (gameState.ticketsUsed / CONFIG.MAX_TICKETS_PER_SESSION) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Kiểm tra trạng thái nút
+            const check = canGetNewTicket();
+            const btn = document.getElementById('getTicketBtn');
+            const warning = document.getElementById('limitWarning');
+            const btnText = document.getElementById('btnText');
+            
+            if (!check.canGet) {
+                if (check.reason === 'limit') {
+                    btn.style.display = 'none';
+                    warning.style.display = 'block';
+                } else if (check.reason === 'cooldown') {
+                    startCooldown(check.remainingTime);
+                }
+            } else {
+                btn.style.display = 'inline-flex';
+                warning.style.display = 'none';
+                
+                if (gameState.ticketsUsed === 0) {
+                    btnText.textContent = '🎲 Lấy Phiếu Đầu Tiên';
+                } else {
+                    btnText.textContent = `🎲 Lấy Phiếu Thứ ${gameState.ticketsUsed + 1}`;
+                }
+            }
+        }
 
         function generateLotoTicket() {
-            // Tạo lưới 3 hàng x 6 cột
             const grid = Array(3).fill(null).map(() => Array(6).fill(''));
-            
-            // Phạm vi số cho mỗi cột
             const columnRanges = [
                 [1, 10], [11, 20], [21, 30], [31, 40], [41, 50], [51, 60]
             ];
-
             const usedNumbers = new Set();
             
-            // Mỗi hàng phải có đúng 4 số
             for (let row = 0; row < 3; row++) {
                 const availableColumns = [0, 1, 2, 3, 4, 5];
                 const selectedColumns = [];
                 
-                // Chọn ngẫu nhiên 4 cột cho hàng này
                 for (let i = 0; i < 4; i++) {
                     const randomIndex = Math.floor(Math.random() * availableColumns.length);
                     selectedColumns.push(availableColumns.splice(randomIndex, 1)[0]);
                 }
                 
-                // Điền số vào các cột đã chọn
                 for (const col of selectedColumns) {
                     let number;
                     do {
@@ -444,7 +762,6 @@
                 }
             }
 
-            // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
             for (let col = 0; col < 6; col++) {
                 const columnNumbers = [];
                 for (let row = 0; row < 3; row++) {
@@ -478,7 +795,6 @@
                         cell.className = 'loto-cell filled';
                         cell.textContent = grid[row][col];
                         
-                        // Thêm hiệu ứng xuất hiện từng số
                         setTimeout(() => {
                             cell.style.animation = 'none';
                             cell.style.animation = 'pulse 0.6s ease-out';
@@ -490,207 +806,23 @@
         }
 
         function getNewTicket() {
+            // Kiểm tra điều kiện
+            const check = canGetNewTicket();
+            if (!check.canGet) {
+                if (check.reason === 'limit') {
+                    showMessage('🚫 Bạn đã sử dụng hết 5 phiếu cho phiên này!', 'error');
+                } else if (check.reason === 'cooldown') {
+                    showMessage(`⏱️ Vui lòng chờ ${check.remainingTime} giây nữa!`, 'warning');
+                }
+                updateUI();
+                return;
+            }
+
             // Hiển thị loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('ticketContainer').style.display = 'none';
             
-            // Simulate loading time cho cảm giác chân thực
             setTimeout(() => {
-                ticketCounter++;
-                
-                // Tạo phiếu mới
-                const grid = generateLotoTicket();
-                currentTicketData = grid;
-                
-                // Cập nhật thông tin phiếu
-                document.getElementById('ticketNumber').textContent = `PHIẾU #${ticketCounter.toString().padStart(3, '0')}`;
-                document.getElementById('ticketTime').textContent = new Date().toLocaleString('vi-VN');
-                
-                // Hiển thị phiếu
-                displayTicket(grid);
-                
-                // Cập nhật thống kê
-                document.getElementById('ticketCount').textContent = ticketCounter;
-                
-                // Ẩn loading, hiện phiếu
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('ticketContainer').style.display = 'block';
-                
-                // Cuộn đến phiếu
-                document.getElementById('ticketContainer').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-                
-            }, 1500); // 1.5 giây loading
-        }
-
-        function saveTicket() {
-            if (!currentTicketData) return;
-            
-            // Tạo canvas để vẽ phiếu
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Kích thước canvas
-            canvas.width = 600;
-            canvas.height = 400;
-            
-            // Background gradient
-            const gradient = ctx.createLinearGradient(0, 0, 600, 400);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(1, '#f8f9fa');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 600, 400);
-            
-            // Border
-            ctx.strokeStyle = '#e74c3c';
-            ctx.lineWidth = 6;
-            ctx.strokeRect(10, 10, 580, 380);
-            
-            // Header
-            ctx.fillStyle = '#e74c3c';
-            ctx.font = 'bold 32px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('LÔ TÔ ONLINE', 300, 60);
-            
-            ctx.fillStyle = '#666';
-            ctx.font = '16px Arial';
-            ctx.fillText(`PHIẾU #${ticketCounter.toString().padStart(3, '0')} - ${new Date().toLocaleDateString('vi-VN')}`, 300, 85);
-            
-            // Column headers
-            const columnHeaders = ['1-10', '11-20', '21-30', '31-40', '41-50', '51-60'];
-            ctx.fillStyle = '#34495e';
-            ctx.font = 'bold 14px Arial';
-            for (let i = 0; i < 6; i++) {
-                ctx.fillText(columnHeaders[i], 75 + i * 85, 130);
-            }
-            
-            // Grid
-            const cellWidth = 70;
-            const cellHeight = 40;
-            const startX = 40;
-            const startY = 150;
-            
-            for (let row = 0; row < 3; row++) {
-                for (let col = 0; col < 6; col++) {
-                    const x = startX + col * 85;
-                    const y = startY + row * 50;
-                    
-                    if (currentTicketData[row][col] === '') {
-                        // Empty cell
-                        ctx.fillStyle = '#ecf0f1';
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
-                        ctx.strokeStyle = '#bdc3c7';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(x, y, cellWidth, cellHeight);
-                    } else {
-                        // Filled cell
-                        const numberGradient = ctx.createLinearGradient(x, y, x + cellWidth, y + cellHeight);
-                        numberGradient.addColorStop(0, '#3498db');
-                        numberGradient.addColorStop(1, '#2980b9');
-                        ctx.fillStyle = numberGradient;
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
-                        
-                        // Number
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(currentTicketData[row][col], x + cellWidth/2, y + cellHeight/2 + 7);
-                    }
-                }
-            }
-            
-            // Footer
-            ctx.fillStyle = '#666';
-            ctx.font = '14px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('🍀 Chúc bạn may mắn! 🍀', 300, 340);
-            ctx.fillText('Phiếu điện tử - Không cần in giấy', 300, 360);
-            
-            // Download image
-            const link = document.createElement('a');
-            link.download = `PhieuLoTo_${ticketCounter}_${Date.now()}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
-            
-            // Show success message
-            showMessage('✅ Đã lưu ảnh phiếu thành công!', 'success');
-        }
-
-        function shareTicket() {
-            if (!currentTicketData) return;
-            
-            const ticketText = `🎯 LÔ TÔ ONLINE - PHIẾU #${ticketCounter.toString().padStart(3, '0')}\n` +
-                `Ngày: ${new Date().toLocaleDateString('vi-VN')}\n\n` +
-                `Các số của tôi:\n` +
-                currentTicketData.map(row => 
-                    row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
-                ).join('\n') + 
-                `\n\n🍀 Chúc may mắn!`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Phiếu Lô Tô của tôi',
-                    text: ticketText
-                });
-            } else {
-                // Fallback - copy to clipboard
-                navigator.clipboard.writeText(ticketText).then(() => {
-                    showMessage('📋 Đã copy phiếu vào clipboard!', 'success');
-                });
-            }
-        }
-
-        function showMessage(text, type) {
-            const message = document.createElement('div');
-            message.textContent = text;
-            message.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
-                color: white;
-                border-radius: 25px;
-                font-weight: bold;
-                z-index: 1000;
-                animation: slideInRight 0.5s ease-out;
-            `;
-            
-            document.body.appendChild(message);
-            
-            setTimeout(() => {
-                message.style.animation = 'slideOutRight 0.5s ease-out forwards';
-                setTimeout(() => message.remove(), 500);
-            }, 3000);
-        }
-
-        // Add CSS animations for messages
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Auto-generate first ticket when page loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                getNewTicket();
-            }, 1000);
-        });
-    </script>
-</body>
-</html>
+                // Cập nhật trạng thái
+                gameState.ticketsUsed++;
+                gameState
