@@ -503,7 +503,7 @@
                 currentTicketData = grid;
                 
                 // Cập nhật thông tin phiếu
-                document.getElementById('ticketNumber').textContent = `PHIẾU #${ticketCounter.toString().padStart(3, '0')}`;
+                document.getElementById('ticketNumber').textContent = `TICKET #${ticketCounter.toString().padStart(3, '0')}`;
                 document.getElementById('ticketTime').textContent = new Date().toLocaleString('vi-VN');
                 
                 // Hiển thị phiếu
@@ -556,7 +556,7 @@
             
             ctx.fillStyle = '#666';
             ctx.font = '16px Arial';
-            ctx.fillText(`PHIẾU #${ticketCounter.toString().padStart(3, '0')} - ${new Date().toLocaleDateString('vi-VN')}`, 300, 85);
+            ctx.fillText(`TICKET #${ticketCounter.toString().padStart(3, '0')} - ${new Date().toLocaleDateString('vi-VN')}`, 300, 85);
             
             // Column headers
             const columnHeaders = ['1-10', '11-20', '21-30', '31-40', '41-50', '51-60'];
@@ -603,10 +603,10 @@
             
             // Footer
             ctx.fillStyle = '#666';
-            ctx.font = '14px Arial';
+            ctx.font = '12px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('🍀 Chúc bạn may mắn! 🍀', 300, 340);
-            ctx.fillText('Phiếu điện tử - Không cần in giấy', 300, 360);
+            ctx.fillText('🍀 Gook luckkk! 🍀', 300, 340);
+            ctx.fillText('Wishing you a nice day!', 300, 360);
             
             // Download image
             const link = document.createElement('a');
@@ -615,29 +615,29 @@
             link.click();
             
             // Show success message
-            showMessage('✅ Đã lưu ảnh phiếu thành công!', 'success');
+            showMessage('✅ Saved ticket successfully!', 'success');
         }
 
         function shareTicket() {
             if (!currentTicketData) return;
             
-            const ticketText = `🎯 LÔ TÔ ONLINE - PHIẾU #${ticketCounter.toString().padStart(3, '0')}\n` +
+            const ticketText = `🎯 LÔ TÔ BINGO - TICKET #${ticketCounter.toString().padStart(3, '0')}\n` +
                 `Ngày: ${new Date().toLocaleDateString('vi-VN')}\n\n` +
-                `Các số của tôi:\n` +
+                `My numbers:\n` +
                 currentTicketData.map(row => 
                     row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
                 ).join('\n') + 
-                `\n\n🍀 Chúc may mắn!`;
+                `\n\n🍀 Good luck!`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'Phiếu Lô Tô của tôi',
+                    title: 'My LÔ TÔ ticket',
                     text: ticketText
                 });
             } else {
                 // Fallback - copy to clipboard
                 navigator.clipboard.writeText(ticketText).then(() => {
-                    showMessage('📋 Đã copy phiếu vào clipboard!', 'success');
+                    showMessage('📋 Copied the ticket to the clipboard!', 'success');
                 });
             }
         }
