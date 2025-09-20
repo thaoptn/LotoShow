@@ -45,6 +45,20 @@
             overflow: hidden;
         }
         
+        .logo-container {
+            margin-bottom: 15px;
+        }
+        
+        .company-logo {
+            height: 60px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            filter: brightness(0) invert(1); /* Làm logo trắng */
+            position: relative;
+            z-index: 2;
+        }
+        
         .header::before {
             content: '';
             position: absolute;
@@ -246,7 +260,7 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            font-size: 10px;
+            font-size: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -407,6 +421,9 @@
 <body>
     <div class="app-container">
         <div class="header">
+            <div class="logo-container">
+                <img src="./assets/logo.png" alt="Company Logo" class="company-logo">
+            </div>
             <h1>LÔ TÔ BINGO</h1>
             <p>by BD/DAD-DEN1</p>
         </div>
@@ -421,8 +438,8 @@
                 <ul>
                     <li>Click "Get LÔ TÔ Ticket" để tạo phiếu mới</li>
                     <li>Mỗi phiếu có 15 số từ 1-90, chia thành 9 cột</li>
-                    <li>Mỗi hàng có đúng 4 số, 5 ô trống</li>
-                    <li><strong>Click vào ô số để đánh dấu (đổi màu đỏ)</strong></li>
+                    <li>Mỗi hàng có đúng 5 số, 4 ô trống</li>
+                    <li><strong>Click vào ô số để đánh dấu</strong></li>
                     <li>Lưu ảnh phiếu để so sánh kết quả sau</li>
                     <li>Thắng khi có đủ số trong 1 hàng được đánh dấu</li>
                 </ul>
@@ -728,7 +745,7 @@
                             ctx.fill();
                             
                             ctx.fillStyle = 'white';
-                            ctx.font = 'bold 10px Arial';
+                            ctx.font = 'bold 8px Arial';
                             ctx.fillText('✓', x + cellWidth - 10, y + 14);
                         }
                     }
