@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #F5CBCB 0%, #FFEAEA 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -59,22 +59,6 @@
             z-index: 2;
         }
         
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255,255,255,0.1),
-                rgba(255,255,255,0.1) 10px,
-                transparent 10px,
-                transparent 20px
-            );
-            animation: shimmer 3s linear infinite;
-        }
         
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
@@ -101,13 +85,13 @@
         }
         
         .get-ticket-btn {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
+            background: linear-gradient(45deg, #21888e, #3b9fa5);
             color: white;
             border: none;
             padding: 20px 40px;
             font-size: 1.3em;
             font-weight: bold;
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
@@ -161,8 +145,8 @@
         
         .ticket {
             background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            border: 3px solid #e74c3c;
-            border-radius: 15px;
+            border: 3px solid #b034a8;
+            border-radius: 10px;
             padding: 25px;
             margin: 20px 0;
             position: relative;
@@ -191,13 +175,13 @@
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px dashed #e74c3c;
+            border-bottom: 1px dashed #b034a8;
         }
         
         .ticket-number {
             font-size: 1.4em;
             font-weight: bold;
-            color: #e74c3c;
+            color: #b034a8;
             margin-bottom: 5px;
         }
         
@@ -232,18 +216,18 @@
         }
         
         .loto-cell.filled {
-            background: linear-gradient(145deg, #3498db, #2980b9);
+            background: linear-gradient(145deg, #21888e, #3b9fa5);
             color: white;
         }
         
         .loto-cell.filled:hover {
-            background: linear-gradient(145deg, #2980b9, #3498db);
+            background: linear-gradient(145deg, #3b9fa5, #21888e);
             transform: scale(1.05);
             box-shadow: 0 3px 10px rgba(52, 152, 219, 0.5);
         }
         
         .loto-cell.filled.marked {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, #b034a8, #e5bde2);
             color: white;
             transform: scale(1.05);
             box-shadow: 0 3px 15px rgba(231, 76, 60, 0.5);
@@ -299,7 +283,7 @@
             text-align: center;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 2px dashed #e74c3c;
+            border-top: 1px dashed #b034a8;
             color: #7f8c8d;
             font-size: 0.9em;
         }
@@ -315,7 +299,7 @@
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: 25px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -323,7 +307,7 @@
         }
         
         .btn-new {
-            background: linear-gradient(45deg, #27ae60, #229954);
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
         }
         
@@ -333,12 +317,12 @@
         }
         
         .btn-share {
-            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
         }
         
         .btn-clear {
-            background: linear-gradient(45deg, #e67e22, #d35400);
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
         }
         
