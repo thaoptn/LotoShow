@@ -219,7 +219,7 @@
         }
         
         .loto-cell {
-            background: white;
+            background-color: #b4b4b4;
             height: 45px;
             display: flex;
             align-items: center;
@@ -255,9 +255,9 @@
         .loto-cell.filled.marked::after {
             content: '✓';
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #7ed957;
+            top: -12px;
+            right: -12px;
+            background: #1f8c3d;
             color: white;
             width: 18px;
             height: 18px;
@@ -276,7 +276,7 @@
         }
         
         .loto-cell.empty {
-            background: #ecf0f1;
+            background: #ffffff;
             color: transparent;
         }
         
@@ -475,10 +475,10 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-new" onclick="getNewTicket()">🔄 New ticket</button>
-                    <button class="btn btn-clear" onclick="clearMarks()">🧹 Remove marks</button>
-                    <button class="btn btn-save" onclick="saveTicket()">💾 Save</button>
-                    <button class="btn btn-share" onclick="shareTicket()">📤 Share</button>
+                    <button class="btn btn-new" onclick="getNewTicket()">New ticket</button>
+                    <button class="btn btn-clear" onclick="clearMarks()">Remove marks</button>
+                    <button class="btn btn-save" onclick="saveTicket()">Save</button>
+                    <button class="btn btn-share" onclick="shareTicket()">Share</button>
                 </div>
             </div>
             
