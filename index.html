@@ -51,6 +51,16 @@
             overflow: hidden;
         }
 
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
         
         .logo-container {
             margin-bottom: 15px;
@@ -202,9 +212,9 @@
             grid-template-columns: repeat(9, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 5px;
-            background: #2c3e50;
+            background: #94abc2;
             border-radius: 10px;
-            padding: 3px;
+            padding: 5px;
             margin: 20px 0;
         }
         
@@ -306,7 +316,7 @@
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: px;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -500,7 +510,7 @@
             const usedNumbers = new Set();
             
             // Mỗi hàng phải có đúng 5 số
-            for (let row = 0; row < 5; row++) {
+            for (let row = 0; row < 3; row++) {
                 const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
                 const selectedColumns = [];
                 
