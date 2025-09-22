@@ -43,6 +43,7 @@
             background-repeat: no-repeat;
             max-width: 800px;
             width: 100%;
+            height: 150px;
             color: white;
             padding: 30px 20px;
             text-align: center;
@@ -525,7 +526,7 @@
             // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
             for (let col = 0; col < 9; col++) {
                 const columnNumbers = [];
-                for (let row = 0; row < 55; row++) {
+                for (let row = 0; row < 5; row++) {
                     if (grid[row][col] !== '') {
                         columnNumbers.push(grid[row][col]);
                     }
@@ -549,7 +550,7 @@
             markedCells.clear();
             updateMarkedCount();
             
-            for (let row = 0; row < 55; row++) {
+            for (let row = 0; row < 5; row++) {
                 for (let col = 0; col < 9; col++) {
                     const cell = document.createElement('div');
                     const cellId = `cell-${row}-${col}`;
