@@ -41,7 +41,8 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            height: 150px;
+            max-width: 800px;
+            width: 100%;
             color: white;
             padding: 30px 20px;
             text-align: center;
@@ -90,16 +91,16 @@
         }
         
         .get-ticket-btn {
-            background: linear-gradient(45deg, #21888e, #3b9fa5);
+            background: linear-gradient(45deg, #952231, #b32639);
             color: white;
             border: none;
             padding: 20px 40px;
             font-size: 1.3em;
             font-weight: bold;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+            box-shadow: 0 8px 20px rgba(192, 57, 43, 0.3);
             margin-bottom: 30px;
             display: inline-flex;
             align-items: center;
@@ -108,7 +109,7 @@
         
         .get-ticket-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(243, 156, 18, 0.4);
+            box-shadow: 0 12px 25px rgba(192, 57, 43, 0.4);
         }
         
         .get-ticket-btn:active {
@@ -150,8 +151,8 @@
         
         .ticket {
             background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            border: 3px solid #b034a8;
-            border-radius: 10px;
+            border: 4px solid #353983;
+            border-radius: 15px;
             padding: 25px;
             margin: 20px 0;
             position: relative;
@@ -180,13 +181,13 @@
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px dashed #b034a8;
+            border-bottom: 2px dashed #1e77b1;
         }
         
         .ticket-number {
             font-size: 1.4em;
             font-weight: bold;
-            color: #b034a8;
+            color: #952231;
             margin-bottom: 5px;
         }
         
@@ -198,10 +199,10 @@
         .loto-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 3px;
+            grid-template-rows: repeat(5, 1fr);
+            gap: 5px;
             background: #2c3e50;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 3px;
             margin: 20px 0;
         }
@@ -214,25 +215,25 @@
             justify-content: center;
             font-size: 16px;
             font-weight: bold;
-            border-radius: 4px;
+            border-radius: 5px;
             transition: all 0.3s;
             cursor: pointer;
             user-select: none;
         }
         
         .loto-cell.filled {
-            background: linear-gradient(145deg, #21888e, #3b9fa5);
+            background: linear-gradient(145deg, #353983, #1e77b1);
             color: white;
         }
         
         .loto-cell.filled:hover {
-            background: linear-gradient(145deg, #3b9fa5, #21888e);
+            background: linear-gradient(145deg, #1e77b1, #353983);
             transform: scale(1.05);
             box-shadow: 0 3px 10px rgba(52, 152, 219, 0.5);
         }
         
         .loto-cell.filled.marked {
-            background: linear-gradient(145deg, #b034a8, #e5bde2);
+            background: linear-gradient(145deg, #af191a, #eb7d7d);
             color: white;
             transform: scale(1.05);
             box-shadow: 0 3px 15px rgba(231, 76, 60, 0.5);
@@ -244,7 +245,7 @@
             position: absolute;
             top: -5px;
             right: -5px;
-            background: #27ae60;
+            background: #ffbd59;
             color: white;
             width: 18px;
             height: 18px;
@@ -270,7 +271,7 @@
         .column-labels {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            gap: 3px;
+            gap: 5px;
             margin-bottom: 10px;
             font-size: 12px;
             font-weight: bold;
@@ -288,7 +289,7 @@
             text-align: center;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px dashed #b034a8;
+            border-top: 2px dashed #1e77b1;
             color: #7f8c8d;
             font-size: 0.9em;
         }
@@ -304,30 +305,30 @@
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: 10px;
+            border-radius: px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 14px;
+            font-size: 12px;
         }
         
         .btn-new {
-            background: linear-gradient(45deg, #3498db, #2980b9);
+            background: linear-gradient(45deg, #e79923, #ffbd59);
             color: white;
         }
         
         .btn-save {
-            background: linear-gradient(45deg, #3498db, #2980b9);
+            background: linear-gradient(45deg, #e79923, #ffbd59);
             color: white;
         }
         
         .btn-share {
-            background: linear-gradient(45deg, #3498db, #2980b9);
+            background: linear-gradient(45deg, #e79923, #ffbd59);
             color: white;
         }
         
         .btn-clear {
-            background: linear-gradient(45deg, #3498db, #2980b9);
+            background: linear-gradient(45deg, #e79923, #ffbd59);
             color: white;
         }
         
@@ -410,36 +411,34 @@
 <body>
     <div class="app-container">
         <div class="header">
-            <h1> </h1>
-            <p> </p>
         </div>
         
         <div class="content">
             <button class="get-ticket-btn" onclick="getNewTicket()">
-                🎲 Get LÔ TÔ Ticket
+                Get LÔTÔ Ticket
             </button>
             
             <div class="instructions">
-                <h3>📋 Hướng dẫn:</h3>
+                <h3>📋 Instruction:</h3>
                 <ul>
-                    <li>Click "Get LÔ TÔ Ticket" để tạo phiếu mới</li>
-                    <li>Mỗi phiếu có 15 số từ 1-90, chia thành 9 cột</li>
-                    <li>Mỗi hàng có đúng 5 số, 4 ô trống</li>
-                    <li><strong>Click vào ô số để đánh dấu</strong></li>
-                    <li>Lưu ảnh phiếu để so sánh kết quả sau</li>
-                    <li>Thắng khi có đủ số trong 1 hàng được đánh dấu</li>
+                    <li>Click "Get LÔTÔ Ticket" button to create new ticket</li>
+                    <li>Each ticket contains 25 numbers from 1 to 90, divided into 9 columns</li>
+                    <li>Each row has exactly 4 numbers and  blank cells</li>
+                    <li><strong>Click on a number cell to mark it</strong></li>
+                    <li>Save an image of the ticket to compare with the results later</li>
+                    <li>You win when all numbers in any single row are marked</li>
                 </ul>
             </div>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>Đang tạo phiếu...</p>
+                <p>Generating a ticket...</p>
             </div>
             
             <div class="ticket-container" id="ticketContainer">
                 <div class="ticket" id="ticket">
                     <div class="ticket-header">
-                        <div class="ticket-number" id="ticketNumber">PHIẾU #001</div>
+                        <div class="ticket-number" id="ticketNumber">TICKETTICKET #001</div>
                         <div class="ticket-time" id="ticketTime"></div>
                     </div>
                     
@@ -458,25 +457,25 @@
                     <div class="loto-grid" id="lotoGrid"></div>
                     
                     <div class="ticket-footer">
-                        <div>🍀 Chúc may mắn! 🍀</div>
-                        <div>Chúc bạn một ngày tốt lành!</div>
+                        <div>🍀 Goodluck! 🍀</div>
+                        <div>Best wishes from BD/DAD-DEN1</div>
                     </div>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-new" onclick="getNewTicket()">🔄 Phiếu mới</button>
-                    <button class="btn btn-clear" onclick="clearMarks()">🧹 Xóa đánh dấu</button>
-                    <button class="btn btn-save" onclick="saveTicket()">💾 Lưu</button>
-                    <button class="btn btn-share" onclick="shareTicket()">📤 Chia sẻ</button>
+                    <button class="btn btn-new" onclick="getNewTicket()">🔄 New ticket</button>
+                    <button class="btn btn-clear" onclick="clearMarks()">🧹 Remove marks</button>
+                    <button class="btn btn-save" onclick="saveTicket()">💾 Save</button>
+                    <button class="btn btn-share" onclick="shareTicket()">📤 Share</button>
                 </div>
             </div>
             
             <div class="stats" id="stats">
                 <div class="stat-item">
-                    Đã tạo: <span id="ticketCount">0</span> phiếu
+                    Created: <span id="ticketCount">0</span> tickets
                 </div>
                 <div class="stat-item">
-                    Đã đánh dấu: <span id="markedCount">0</span> số
+                    Marked: <span id="markedCount">0</span> numbersnumbers
                 </div>
             </div>
         </div>
@@ -488,8 +487,8 @@
         let markedCells = new Set();
 
         function generateLotoTicket() {
-            // Tạo lưới 3 hàng x 9 cột
-            const grid = Array(3).fill(null).map(() => Array(9).fill(''));
+            // Tạo lưới 5 hàng x 9 cột
+            const grid = Array(5).fill(null).map(() => Array(9).fill(''));
             
             // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
             const columnRanges = [
@@ -500,11 +499,11 @@
             const usedNumbers = new Set();
             
             // Mỗi hàng phải có đúng 5 số
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 5; row++) {
                 const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
                 const selectedColumns = [];
                 
-                // Chọn ngẫu nhiên 5 cột cho hàng này
+                // Chọn ngẫu nhiên 4 cột cho hàng này
                 for (let i = 0; i < 4; i++) {
                     const randomIndex = Math.floor(Math.random() * availableColumns.length);
                     selectedColumns.push(availableColumns.splice(randomIndex, 1)[0]);
@@ -526,7 +525,7 @@
             // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
             for (let col = 0; col < 9; col++) {
                 const columnNumbers = [];
-                for (let row = 0; row < 3; row++) {
+                for (let row = 0; row < 55; row++) {
                     if (grid[row][col] !== '') {
                         columnNumbers.push(grid[row][col]);
                     }
@@ -534,7 +533,7 @@
                 columnNumbers.sort((a, b) => a - b);
                 
                 let numIndex = 0;
-                for (let row = 0; row < 3; row++) {
+                for (let row = 0; row < 5; row++) {
                     if (grid[row][col] !== '') {
                         grid[row][col] = columnNumbers[numIndex++];
                     }
@@ -550,7 +549,7 @@
             markedCells.clear();
             updateMarkedCount();
             
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 55; row++) {
                 for (let col = 0; col < 9; col++) {
                     const cell = document.createElement('div');
                     const cellId = `cell-${row}-${col}`;
@@ -598,7 +597,7 @@
             });
             markedCells.clear();
             updateMarkedCount();
-            showMessage('🧹 Đã xóa tất cả đánh dấu!', 'success');
+            showMessage('All marks have been cleared!', 'success');
         }
 
         function updateMarkedCount() {
@@ -619,7 +618,7 @@
                 currentTicketData = grid;
                 
                 // Cập nhật thông tin phiếu
-                document.getElementById('ticketNumber').textContent = `PHIẾU #${ticketCounter.toString().padStart(3, '0')}`;
+                document.getElementById('ticketNumber').textContent = `TICKETTICKET #${ticketCounter.toString().padStart(3, '0')}`;
                 document.getElementById('ticketTime').textContent = new Date().toLocaleString('vi-VN');
                 
                 // Hiển thị phiếu
@@ -660,7 +659,7 @@
             ctx.fillRect(0, 0, 900, 500);
             
             // Border
-            ctx.strokeStyle = '#e74c3c';
+            ctx.strokeStyle = '#353983';
             ctx.lineWidth = 6;
             ctx.strokeRect(10, 10, 880, 480);
             
@@ -688,77 +687,28 @@
             const startX = 40;
             const startY = 150;
             
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 5; row++) {
                 for (let col = 0; col < 9; col++) {
                     const x = startX + col * 85;
                     const y = startY + row * 60;
                     const cellId = `cell-${row}-${col}`;
                     const isMarked = markedCells.has(cellId);
-                    
-                    if (currentTicketData[row][col] === '') {
-                        // Empty cell
-                        ctx.fillStyle = '#ecf0f1';
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
-                        ctx.strokeStyle = '#bdc3c7';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(x, y, cellWidth, cellHeight);
-                    } else {
-                        // Filled cell
-                        let cellGradient;
-                        if (isMarked) {
-                            cellGradient = ctx.createLinearGradient(x, y, x + cellWidth, y + cellHeight);
-                            cellGradient.addColorStop(0, '#e74c3c');
-                            cellGradient.addColorStop(1, '#c0392b');
-                        } else {
-                            cellGradient = ctx.createLinearGradient(x, y, x + cellWidth, y + cellHeight);
-                            cellGradient.addColorStop(0, '#3498db');
-                            cellGradient.addColorStop(1, '#2980b9');
-                        }
-                        ctx.fillStyle = cellGradient;
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
-                        
-                        // Number
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 18px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(currentTicketData[row][col], x + cellWidth/2, y + cellHeight/2 + 6);
-                        
-                        // Mark indicator
-                        if (isMarked) {
-                            ctx.fillStyle = '#27ae60';
-                            ctx.beginPath();
-                            ctx.arc(x + cellWidth - 10, y + 10, 8, 0, 2 * Math.PI);
-                            ctx.fill();
-                            
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 10px Arial';
-                            ctx.fillText('✓', x + cellWidth - 10, y + 14);
-                        }
-                    }
-                }
-            }
-            
-            // Footer
-            ctx.fillStyle = '#666';
-            ctx.font = '14px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('🍀 Chúc may mắn! 🍀', 450, 420);
-            ctx.fillText('Chúc bạn một ngày tốt lành!', 450, 445);
+    DEN1', 450, 445);
             
             // Marked count
             ctx.fillStyle = '#e74c3c';
             ctx.font = 'bold 12px Arial';
             ctx.textAlign = 'left';
-            ctx.fillText(`Đã đánh dấu: ${markedCells.size} số`, 40, 470);
+            ctx.fillText(`Marked: ${markedCells.size} numbers`, 40, 470);
             
             // Download image
             const link = document.createElement('a');
-            link.download = `PhieuLoTo_${ticketCounter}_${Date.now()}.png`;
+            link.download = `LoToTicket_${ticketCounter}_${Date.now()}.png`;
             link.href = canvas.toDataURL();
             link.click();
             
             // Show success message
-            showMessage('✅ Đã lưu phiếu thành công!', 'success');
+            showMessage('Saved ticket succcessfully!', 'success');
         }
 
         function shareTicket() {
@@ -772,24 +722,24 @@
                 }
             });
             
-            const ticketText = `🎯 LÔ TÔ BINGO - PHIẾU #${ticketCounter.toString().padStart(3, '0')}\n` +
+            const ticketText = `LÔTÔ BINGO - TICKET #${ticketCounter.toString().padStart(3, '0')}\n` +
                 `Ngày: ${new Date().toLocaleDateString('vi-VN')}\n\n` +
-                `Các số trên phiếu:\n` +
+                `Numbers in ticket:\n` +
                 currentTicketData.map(row => 
                     row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
                 ).join('\n') + 
-                `\n\nĐã đánh dấu: ${markedNumbers.sort((a, b) => a - b).join(', ')}\n` +
-                `\n🍀 Chúc may mắn!`;
+                `\n\nMarked: ${markedNumbers.sort((a, b) => a - b).join(', ')}\n` +
+                `\n🍀 Good luck!`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'Phiếu LÔ TÔ của tôi',
+                    title: 'My LÔTÔ Ticket',
                     text: ticketText
                 });
             } else {
                 // Fallback - copy to clipboard
                 navigator.clipboard.writeText(ticketText).then(() => {
-                    showMessage('📋 Đã sao chép phiếu vào clipboard!', 'success');
+                    showMessage('Copied to clipboard!', 'success');
                 });
             }
         }
