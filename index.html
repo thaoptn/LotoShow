@@ -426,7 +426,7 @@
         
         <div class="content">
             <button class="get-ticket-btn" onclick="getNewTicket()">
-                Get LÔTÔ Ticket
+                🎫 Get LÔTÔ Ticket
             </button>
             
             <div class="instructions">
@@ -443,7 +443,7 @@
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>Generating a ticket...</p>
+                <p>Generating ticket...</p>
             </div>
             
             <div class="ticket-container" id="ticketContainer">
@@ -493,7 +493,7 @@
     </div>
 
     <script>
-        let ticketCounter = 0;
+       let ticketCounter = 0;
         let currentTicketData = null;
         let markedCells = new Set();
 
@@ -514,8 +514,8 @@
                 const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
                 const selectedColumns = [];
                 
-                // Chọn ngẫu nhiên 4 cột cho hàng này
-                for (let i = 0; i < 4; i++) {
+                // Chọn ngẫu nhiên 5 cột cho hàng này
+                for (let i = 0; i < 5; i++) {
                     const randomIndex = Math.floor(Math.random() * availableColumns.length);
                     selectedColumns.push(availableColumns.splice(randomIndex, 1)[0]);
                 }
@@ -575,7 +575,6 @@
                         
                         // Thêm hiệu ứng xuất hiện từng số
                         setTimeout(() => {
-                            cell.style.animation = 'none';
                             cell.style.animation = 'pulse 0.6s ease-out';
                         }, (row * 9 + col) * 50);
                     }
@@ -608,7 +607,7 @@
             });
             markedCells.clear();
             updateMarkedCount();
-            showMessage('All marks have been cleared!', 'success');
+            showMessage('All marks cleared!', 'success');
         }
 
         function updateMarkedCount() {
@@ -629,8 +628,8 @@
                 currentTicketData = grid;
                 
                 // Cập nhật thông tin phiếu
-                document.getElementById('ticketNumber').textContent = `TICKETTICKET #${ticketCounter.toString().padStart(3, '0')}`;
-                document.getElementById('ticketTime').textContent = new Date().toLocaleString('vi-VN');
+                document.getElementById('ticketNumber').textContent = `TICKET #${ticketCounter.toString().padStart(3, '0')}`;
+                document.getElementById('ticketTime').textContent = new Date().toLocaleString('en-US');
                 
                 // Hiển thị phiếu
                 displayTicket(grid);
@@ -682,7 +681,7 @@
             
             ctx.fillStyle = '#666';
             ctx.font = '16px Arial';
-            ctx.fillText(`PHIẾU #${ticketCounter.toString().padStart(3, '0')} - ${new Date().toLocaleDateString('vi-VN')}`, 450, 85);
+            ctx.fillText(`TICKET #${ticketCounter.toString().padStart(3, '0')} - ${new Date().toLocaleDateString('en-US')}`, 450, 85);
             
             // Column headers
             const columnHeaders = ['1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90'];
@@ -704,7 +703,45 @@
                     const y = startY + row * 60;
                     const cellId = `cell-${row}-${col}`;
                     const isMarked = markedCells.has(cellId);
-    DEN1', 450, 445);
+                    
+                    if (currentTicketData[row][col] !== '') {
+                        // Vẽ cell có số
+                        ctx.fillStyle = isMarked ? '#e74c3c' : '#3498db';
+                        ctx.fillRect(x, y, cellWidth, cellHeight);
+                        
+                        // Border
+                        ctx.strokeStyle = '#2c3e50';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x, y, cellWidth, cellHeight);
+                        
+                        // Số
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 18px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(currentTicketData[row][col], x + cellWidth/2, y + cellHeight/2 + 6);
+                        
+                        // Đánh dấu nếu được chọn
+                        if (isMarked) {
+                            ctx.fillStyle = '#f1c40f';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.fillText('✓', x + cellWidth - 10, y + 15);
+                        }
+                    } else {
+                        // Vẽ cell trống
+                        ctx.fillStyle = '#ecf0f1';
+                        ctx.fillRect(x, y, cellWidth, cellHeight);
+                        ctx.strokeStyle = '#bdc3c7';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x, y, cellWidth, cellHeight);
+                    }
+                }
+            }
+            
+            // Footer
+            ctx.fillStyle = '#7f8c8d';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🍀 Good luck! - BD/DAD-DEN1', 450, 445);
             
             // Marked count
             ctx.fillStyle = '#e74c3c';
@@ -714,12 +751,12 @@
             
             // Download image
             const link = document.createElement('a');
-            link.download = `LoToTicket_${ticketCounter}_${Date.now()}.png`;
+            link.download = `LoTo_Phieu_${ticketCounter}_${Date.now()}.png`;
             link.href = canvas.toDataURL();
             link.click();
             
             // Show success message
-            showMessage('Saved ticket succcessfully!', 'success');
+            showMessage('Ticket saved successfully!', 'success');
         }
 
         function shareTicket() {
@@ -734,7 +771,7 @@
             });
             
             const ticketText = `LÔTÔ BINGO - TICKET #${ticketCounter.toString().padStart(3, '0')}\n` +
-                `Ngày: ${new Date().toLocaleDateString('vi-VN')}\n\n` +
+                `Date: ${new Date().toLocaleDateString('en-US')}\n\n` +
                 `Numbers in ticket:\n` +
                 currentTicketData.map(row => 
                     row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
@@ -778,25 +815,6 @@
                 setTimeout(() => message.remove(), 500);
             }, 3000);
         }
-
-        // Add CSS animations for messages
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
 
         // Auto-generate first ticket when page loads
         window.addEventListener('load', () => {
