@@ -142,7 +142,7 @@
         
         .instructions ul {
             color: #555;
-            line-height: 1.6;
+            line-height: 1.4;
         }
         
         .instructions li {
@@ -214,7 +214,7 @@
             gap: 5px;
             background: #34495e;
             border-radius: 10px;
-            padding: 5px;
+            padding: 3px;
             margin: 20px 0;
         }
         
@@ -224,7 +224,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: bold;
             border-radius: 5px;
             transition: all 0.3s;
@@ -252,22 +252,6 @@
             position: relative;
         }
         
-        .loto-cell.filled.marked::after {
-            content: '✓';
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #19b77c;
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: checkmarkBounce 0.3s ease-out;
-        }
         
         @keyframes checkmarkBounce {
             0% { transform: scale(0); }
@@ -283,9 +267,9 @@
         .column-labels {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            gap: 5px;
+            gap: 3px;
             margin-bottom: 10px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
         }
         
