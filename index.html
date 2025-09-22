@@ -200,7 +200,7 @@
         .loto-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            grid-template-rows: repeat(5, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 5px;
             background: #2c3e50;
             border-radius: 10px;
@@ -458,7 +458,7 @@
                     <div class="loto-grid" id="lotoGrid"></div>
                     
                     <div class="ticket-footer">
-                        <div>🍀 Goodluck! 🍀</div>
+                        <div>🍀 Good luck! 🍀</div>
                         <div>Best wishes from BD/DAD-DEN1</div>
                     </div>
                 </div>
@@ -488,8 +488,8 @@
         let markedCells = new Set();
 
         function generateLotoTicket() {
-            // Tạo lưới 5 hàng x 9 cột
-            const grid = Array(5).fill(null).map(() => Array(9).fill(''));
+            // Tạo lưới 3 hàng x 9 cột
+            const grid = Array(3).fill(null).map(() => Array(9).fill(''));
             
             // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
             const columnRanges = [
@@ -526,7 +526,7 @@
             // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
             for (let col = 0; col < 9; col++) {
                 const columnNumbers = [];
-                for (let row = 0; row < 5; row++) {
+                for (let row = 0; row < 3; row++) {
                     if (grid[row][col] !== '') {
                         columnNumbers.push(grid[row][col]);
                     }
@@ -534,7 +534,7 @@
                 columnNumbers.sort((a, b) => a - b);
                 
                 let numIndex = 0;
-                for (let row = 0; row < 5; row++) {
+                for (let row = 0; row < 3; row++) {
                     if (grid[row][col] !== '') {
                         grid[row][col] = columnNumbers[numIndex++];
                     }
@@ -550,7 +550,7 @@
             markedCells.clear();
             updateMarkedCount();
             
-            for (let row = 0; row < 5; row++) {
+            for (let row = 0; row < 3; row++) {
                 for (let col = 0; col < 9; col++) {
                     const cell = document.createElement('div');
                     const cellId = `cell-${row}-${col}`;
@@ -688,7 +688,7 @@
             const startX = 40;
             const startY = 150;
             
-            for (let row = 0; row < 5; row++) {
+            for (let row = 0; row < 3; row++) {
                 for (let col = 0; col < 9; col++) {
                     const x = startX + col * 85;
                     const y = startY + row * 60;
