@@ -257,7 +257,17 @@
             box-shadow: 0 3px 15px rgba(231, 76, 60, 0.5);
             position: relative;
         }
+
+        .loto-cell.winning {
+            background: linear-gradient(145deg, #f1c40f, #f39c12) !important;
+            color: #2c3e50 !important;
+            animation: winningPulse 1s ease-in-out infinite;
+        }
         
+        @keyframes winningPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
         
         @keyframes checkmarkBounce {
             0% { transform: scale(0); }
@@ -375,6 +385,97 @@
             animation: spin 1s linear infinite;
         }
 
+/* WIN CELEBRATION STYLES */
+        .win-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .win-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .win-message {
+            color: #ffbd59;
+            padding: 50px;
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            animation: winBounce 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        
+        @keyframes winBounce {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.2) rotate(-10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        @keyframes winShimmer {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+        
+        /* CONFETTI STYLES */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            z-index: 2100;
+        }
+        
+        .confetti::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .confetti:nth-child(1)::before { background: #ff0000; }
+        .confetti:nth-child(2)::before { background: #29fff0; }
+        .confetti:nth-child(3)::before { background: #45b7d1; }
+        .confetti:nth-child(4)::before { background: #f9ca24; }
+        .confetti:nth-child(5)::before { background: #f0932b; }
+        .confetti:nth-child(6)::before { background: #eb4d4b; }
+        .confetti:nth-child(7)::before { background: #6ab04c; }
+        .confetti:nth-child(8)::before { background: #be2edd; }
+        .confetti:nth-child(9)::before { background: #0abde3; }
+        .confetti:nth-child(10)::before { background: #feca57; }
+        
+        .confetti-fall {
+            animation: confettiFall 3s linear forwards;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) translateX(var(--random-x, 0)) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--random-x, 0)) rotate(720deg);
+                opacity: 1;
+            }
+        }
+        
         @keyframes slideInRight {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -422,6 +523,12 @@
             .stats {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .win-message {
+                font-size: 2em;
+                padding: 30px;
+                margin: 20px;
             }
         }
     </style>
@@ -503,10 +610,18 @@
         </div>
     </div>
 
+    <!-- Win Overlay -->
+    <div class="win-overlay" id="winOverlay">
+        <div class="win-message">
+            🎉 BINGO! You Win! 🎉
+        </div>
+    </div>
+    
     <script>
-     let ticketCounter = 0;
+        let ticketCounter = 0;
         let currentTicketData = null;
         let markedCells = new Set();
+        let hasWon = false;
 
         function generateLotoTicket() {
             // Tạo 3 lưới 3 hàng x 9 cột
@@ -589,6 +704,7 @@
 
         function displayTicket(grids) {
             markedCells.clear();
+            hasWon = false;
             updateMarkedCount();
             
             // Display each grid
@@ -628,22 +744,122 @@
             if (markedCells.has(cellId)) {
                 markedCells.delete(cellId);
                 cell.classList.remove('marked');
+                // Remove winning class if it was part of winning row
+                cell.classList.remove('winning');
+                // Reset win state to allow re-checking
+                hasWon = false;
             } else {
                 markedCells.add(cellId);
                 cell.classList.add('marked');
             }
             
             updateMarkedCount();
+            checkForWin();
+        }
+
+        function checkForWin() {
+            if (!currentTicketData) return;
+            
+            // First, remove all winning highlights
+            document.querySelectorAll('.loto-cell.winning').forEach(cell => {
+                cell.classList.remove('winning');
+            });
+            
+            // Check each grid and row for a win
+            let foundWin = false;
+            for (let gridIndex = 0; gridIndex < 3; gridIndex++) {
+                const grid = currentTicketData[gridIndex];
+                
+                for (let row = 0; row < 3; row++) {
+                    let markedInRow = 0;
+                    const rowCells = [];
+                    
+                    for (let col = 0; col < 9; col++) {
+                        if (grid[row][col] !== '') {
+                            const cellId = `cell-${gridIndex}-${row}-${col}`;
+                            rowCells.push(cellId);
+                            if (markedCells.has(cellId)) {
+                                markedInRow++;
+                            }
+                        }
+                    }
+                    
+                    // Check if all 5 numbers in this row are marked
+                    if (markedInRow === 5 && rowCells.length === 5) {
+                        foundWin = true;
+                        highlightWinningRow(rowCells);
+                        if (!hasWon) {
+                            hasWon = true;
+                            showWinCelebration();
+                        }
+                        break;
+                    }
+                }
+                if (foundWin) break;
+            }
+            
+            // If no win found, reset hasWon state
+            if (!foundWin) {
+                hasWon = false;
+            }
+        }
+
+        function highlightWinningRow(winningCells) {
+            winningCells.forEach(cellId => {
+                const cell = document.getElementById(cellId);
+                if (cell) {
+                    cell.classList.add('winning');
+                }
+            });
+        }
+
+        function showWinCelebration() {
+            // Show win overlay
+            const winOverlay = document.getElementById('winOverlay');
+            winOverlay.classList.add('show');
+            
+            // Create confetti
+            createConfetti();
+            
+            // Hide overlay after 4 seconds
+            setTimeout(() => {
+                winOverlay.classList.remove('show');
+            }, 4000);
+        }
+
+        function createConfetti() {
+            const confettiCount = 80;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti confetti-fall';
+                
+                // Random horizontal position
+                const randomX = (Math.random() - 0.5) * 300;
+                confetti.style.setProperty('--random-x', `${randomX}px`);
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 5000);
+            }
         }
 
         function clearMarks() {
             markedCells.forEach(cellId => {
                 const cell = document.getElementById(cellId);
                 if (cell) {
-                    cell.classList.remove('marked');
+                    cell.classList.remove('marked', 'winning');
                 }
             });
             markedCells.clear();
+            hasWon = false;
             updateMarkedCount();
             showMessage('All marks cleared!', 'success');
         }
