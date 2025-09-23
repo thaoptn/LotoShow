@@ -509,16 +509,18 @@
         function generateLotoTicket() {
             // Tạo 3 lưới 3 hàng x 9 cột
             const grids = [];
+            
+            // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
+            const columnRanges = [
+                [1, 10], [11, 20], [21, 30], [31, 40], [41, 50], 
+                [51, 60], [61, 70], [71, 80], [81, 90]
+            ];
+
+            // Tạo Set để theo dõi số đã sử dụng cho mỗi cột (không trùng trong 3 grid)
+            const usedNumbersByColumn = Array(9).fill(null).map(() => new Set());
+            
             for (let gridIndex = 0; gridIndex < 3; gridIndex++) {
                 const grid = Array(3).fill(null).map(() => Array(9).fill(''));
-                
-                // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
-                const columnRanges = [
-                    [1, 10], [11, 20], [21, 30], [31, 40], [41, 50], 
-                    [51, 60], [61, 70], [71, 80], [81, 90]
-                ];
-
-                const usedNumbers = new Set();
                 
                 // Mỗi hàng phải có đúng 5 số
                 for (let row = 0; row < 3; row++) {
@@ -534,12 +536,27 @@
                     // Điền số vào các cột đã chọn
                     for (const col of selectedColumns) {
                         let number;
+                        let attempts = 0;
+                        const maxAttempts = 50; // Tránh vòng lặp vô hạn
+                        
                         do {
                             const [min, max] = columnRanges[col];
                             number = Math.floor(Math.random() * (max - min + 1)) + min;
-                        } while (usedNumbers.has(number));
+                            attempts++;
+                        } while (usedNumbersByColumn[col].has(number) && attempts < maxAttempts);
                         
-                        usedNumbers.add(number);
+                        // Nếu không tìm được số khác, chọn số bất kỳ chưa dùng trong cột
+                        if (attempts >= maxAttempts) {
+                            const [min, max] = columnRanges[col];
+                            for (let n = min; n <= max; n++) {
+                                if (!usedNumbersByColumn[col].has(n)) {
+                                    number = n;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        usedNumbersByColumn[col].add(number);
                         grid[row][col] = number;
                     }
                 }
