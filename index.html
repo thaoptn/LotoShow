@@ -437,16 +437,16 @@
             position: fixed;
             top: -30px;
             left: 50%;
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
             z-index: 2100;
         }
         
         .confetti::before {
             content: '';
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
         }
         
@@ -470,6 +470,10 @@
                 transform: translateY(-100vh) translateX(var(--random-x, 0)) rotate(0deg);
                 opacity: 1;
             }
+            80% {
+                transform: translateY(80vh) translateX(var(--random-x, 0)) rotate(576deg);
+                opacity: 1;
+        }
             100% {
                 transform: translateY(100vh) translateX(var(--random-x, 0)) rotate(720deg);
                 opacity: 0;
