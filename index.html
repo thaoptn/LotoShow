@@ -210,12 +210,18 @@
         .loto-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            grid-template-rows: repeat(6, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 3px;
             background: #34495e;
             border-radius: 10px;
             padding: 3px;
             margin: 20px 0;
+        }
+
+        .grid-separator {
+            border-top: 2px dashed #1e77b1;
+            margin: 15px 0;
+            opacity: 0.7;
         }
         
         .loto-cell {
@@ -224,7 +230,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             border-radius: 5px;
             transition: all 0.3s;
@@ -366,6 +372,20 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -418,7 +438,7 @@
                 <h3>📋 Instruction:</h3>
                 <ul>
                     <li>Click "Get LÔTÔ Ticket" button to create new ticket</li>
-                    <li>Each ticket contains 30 numbers from 1 to 90, divided into 9 columns</li>
+                    <li>Each ticket contains  numbers from 1 to 90, divided into 9 columns</li>
                     <li>Each row has exactly 5 numbers and  blank cells</li>
                     <li><strong>Click on a number cell to mark it</strong></li>
                     <li>Save an image of the ticket to compare with the results later</li>
@@ -450,7 +470,11 @@
                         <div class="column-label">81-90</div>
                     </div>
                     
-                    <div class="loto-grid" id="lotoGrid"></div>
+                    <div class="loto-grid" id="lotoGrid1"></div>
+                    <div class="grid-separator"></div>
+                    <div class="loto-grid" id="lotoGrid2"></div>
+                    <div class="grid-separator"></div>
+                    <div class="loto-grid" id="lotoGrid3"></div>
                     
                     <div class="ticket-footer">
                         <div>🍀 Good luck! 🍀</div>
@@ -478,92 +502,102 @@
     </div>
 
     <script>
-      let ticketCounter = 0;
+     let ticketCounter = 0;
         let currentTicketData = null;
         let markedCells = new Set();
 
         function generateLotoTicket() {
-            // Tạo lưới 6 hàng x 9 cột
-            const grid = Array(6).fill(null).map(() => Array(9).fill(''));
-            
-            // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
-            const columnRanges = [
-                [1, 10], [11, 20], [21, 30], [31, 40], [41, 50], 
-                [51, 60], [61, 70], [71, 80], [81, 90]
-            ];
+            // Tạo 3 lưới 3 hàng x 9 cột
+            const grids = [];
+            for (let gridIndex = 0; gridIndex < 3; gridIndex++) {
+                const grid = Array(3).fill(null).map(() => Array(9).fill(''));
+                
+                // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
+                const columnRanges = [
+                    [1, 10], [11, 20], [21, 30], [31, 40], [41, 50], 
+                    [51, 60], [61, 70], [71, 80], [81, 90]
+                ];
 
-            const usedNumbers = new Set();
-            
-            // Mỗi hàng phải có đúng 5 số
-            for (let row = 0; row < 6; row++) {
-                const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-                const selectedColumns = [];
+                const usedNumbers = new Set();
                 
-                // Chọn ngẫu nhiên 5 cột cho hàng này
-                for (let i = 0; i < 5; i++) {
-                    const randomIndex = Math.floor(Math.random() * availableColumns.length);
-                    selectedColumns.push(availableColumns.splice(randomIndex, 1)[0]);
-                }
-                
-                // Điền số vào các cột đã chọn
-                for (const col of selectedColumns) {
-                    let number;
-                    do {
-                        const [min, max] = columnRanges[col];
-                        number = Math.floor(Math.random() * (max - min + 1)) + min;
-                    } while (usedNumbers.has(number));
+                // Mỗi hàng phải có đúng 5 số
+                for (let row = 0; row < 3; row++) {
+                    const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+                    const selectedColumns = [];
                     
-                    usedNumbers.add(number);
-                    grid[row][col] = number;
-                }
-            }
-
-            // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
-            for (let col = 0; col < 9; col++) {
-                const columnNumbers = [];
-                for (let row = 0; row < 6; row++) {
-                    if (grid[row][col] !== '') {
-                        columnNumbers.push(grid[row][col]);
+                    // Chọn ngẫu nhiên 5 cột cho hàng này
+                    for (let i = 0; i < 5; i++) {
+                        const randomIndex = Math.floor(Math.random() * availableColumns.length);
+                        selectedColumns.push(availableColumns.splice(randomIndex, 1)[0]);
+                    }
+                    
+                    // Điền số vào các cột đã chọn
+                    for (const col of selectedColumns) {
+                        let number;
+                        do {
+                            const [min, max] = columnRanges[col];
+                            number = Math.floor(Math.random() * (max - min + 1)) + min;
+                        } while (usedNumbers.has(number));
+                        
+                        usedNumbers.add(number);
+                        grid[row][col] = number;
                     }
                 }
-                columnNumbers.sort((a, b) => a - b);
+
+                // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
+                for (let col = 0; col < 9; col++) {
+                    const columnNumbers = [];
+                    for (let row = 0; row < 3; row++) {
+                        if (grid[row][col] !== '') {
+                            columnNumbers.push(grid[row][col]);
+                        }
+                    }
+                    columnNumbers.sort((a, b) => a - b);
+                    
+                    let numIndex = 0;
+                    for (let row = 0; row < 3; row++) {
+                        if (grid[row][col] !== '') {
+                            grid[row][col] = columnNumbers[numIndex++];
+                        }
+                    }
+                }
                 
-                let numIndex = 0;
-                for (let row = 0; row < 6; row++) {
-                    if (grid[row][col] !== '') {
-                        grid[row][col] = columnNumbers[numIndex++];
-                    }
-                }
+                grids.push(grid);
             }
 
-            return grid;
+            return grids;
         }
 
-        function displayTicket(grid) {
-            const lotoGrid = document.getElementById('lotoGrid');
-            lotoGrid.innerHTML = '';
+        function displayTicket(grids) {
             markedCells.clear();
             updateMarkedCount();
             
-            for (let row = 0; row < 6; row++) {
-                for (let col = 0; col < 9; col++) {
-                    const cell = document.createElement('div');
-                    const cellId = `cell-${row}-${col}`;
-                    cell.id = cellId;
-                    
-                    if (grid[row][col] === '') {
-                        cell.className = 'loto-cell empty';
-                    } else {
-                        cell.className = 'loto-cell filled';
-                        cell.textContent = grid[row][col];
-                        cell.onclick = () => toggleMark(cellId);
+            // Display each grid
+            for (let gridIndex = 0; gridIndex < 3; gridIndex++) {
+                const grid = grids[gridIndex];
+                const lotoGrid = document.getElementById(`lotoGrid${gridIndex + 1}`);
+                lotoGrid.innerHTML = '';
+                
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        const cell = document.createElement('div');
+                        const cellId = `cell-${gridIndex}-${row}-${col}`;
+                        cell.id = cellId;
                         
-                        // Thêm hiệu ứng xuất hiện từng số
-                        setTimeout(() => {
-                            cell.style.animation = 'pulse 0.6s ease-out';
-                        }, (row * 9 + col) * 50);
+                        if (grid[row][col] === '') {
+                            cell.className = 'loto-cell empty';
+                        } else {
+                            cell.className = 'loto-cell filled';
+                            cell.textContent = grid[row][col];
+                            cell.onclick = () => toggleMark(cellId);
+                            
+                            // Thêm hiệu ứng xuất hiện từng số
+                            setTimeout(() => {
+                                cell.style.animation = 'pulse 0.6s ease-out';
+                            }, (gridIndex * 27 + row * 9 + col) * 30);
+                        }
+                        lotoGrid.appendChild(cell);
                     }
-                    lotoGrid.appendChild(cell);
                 }
             }
         }
@@ -609,15 +643,15 @@
                 ticketCounter++;
                 
                 // Tạo phiếu mới
-                const grid = generateLotoTicket();
-                currentTicketData = grid;
+                const grids = generateLotoTicket();
+                currentTicketData = grids;
                 
                 // Cập nhật thông tin phiếu
                 document.getElementById('ticketNumber').textContent = `TICKET #${ticketCounter.toString().padStart(3, '0')}`;
                 document.getElementById('ticketTime').textContent = new Date().toLocaleString('en-US');
                 
                 // Hiển thị phiếu
-                displayTicket(grid);
+                displayTicket(grids);
                 
                 // Cập nhật thống kê
                 document.getElementById('ticketCount').textContent = ticketCounter;
@@ -644,19 +678,19 @@
             
             // Kích thước canvas
             canvas.width = 900;
-            canvas.height = 700;
+            canvas.height = 800;
             
             // Background gradient
-            const gradient = ctx.createLinearGradient(0, 0, 900, 700);
+            const gradient = ctx.createLinearGradient(0, 0, 900, 800);
             gradient.addColorStop(0, '#ffffff');
             gradient.addColorStop(1, '#f8f9fa');
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 900, 700);
+            ctx.fillRect(0, 0, 900, 800);
             
             // Border
             ctx.strokeStyle = '#353983';
             ctx.lineWidth = 6;
-            ctx.strokeRect(10, 10, 880, 680);
+            ctx.strokeRect(10, 10, 880, 780);
             
             // Header
             ctx.fillStyle = '#e74c3c';
@@ -676,48 +710,66 @@
                 ctx.fillText(columnHeaders[i], 75 + i * 85, 130);
             }
             
-            // Grid
+            // Grid variables
             const cellWidth = 70;
             const cellHeight = 50;
             const startX = 40;
-            const startY = 150;
             
-            for (let row = 0; row < 6; row++) {
-                for (let col = 0; col < 9; col++) {
-                    const x = startX + col * 85;
-                    const y = startY + row * 60;
-                    const cellId = `cell-${row}-${col}`;
-                    const isMarked = markedCells.has(cellId);
-                    
-                    if (currentTicketData[row][col] !== '') {
-                        // Vẽ cell có số
-                        ctx.fillStyle = isMarked ? '#e74c3c' : '#3498db';
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
+            // Draw 3 grids
+            for (let gridIndex = 0; gridIndex < 3; gridIndex++) {
+                const grid = currentTicketData[gridIndex];
+                const gridStartY = 150 + gridIndex * 200; // 200px spacing between grids
+                
+                // Draw grid separator (dashed line)
+                if (gridIndex > 0) {
+                    ctx.setLineDash([10, 5]);
+                    ctx.strokeStyle = '#1e77b1';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(40, gridStartY - 20);
+                    ctx.lineTo(860, gridStartY - 20);
+                    ctx.stroke();
+                    ctx.setLineDash([]); // Reset line dash
+                }
+                
+                // Draw grid cells
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        const x = startX + col * 85;
+                        const y = gridStartY + row * 60;
+                        const cellId = `cell-${gridIndex}-${row}-${col}`;
+                        const isMarked = markedCells.has(cellId);
                         
-                        // Border
-                        ctx.strokeStyle = '#2c3e50';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(x, y, cellWidth, cellHeight);
-                        
-                        // Số
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 18px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(currentTicketData[row][col], x + cellWidth/2, y + cellHeight/2 + 6);
-                        
-                        // Đánh dấu nếu được chọn
-                        if (isMarked) {
-                            ctx.fillStyle = '#f1c40f';
-                            ctx.font = 'bold 12px Arial';
-                            ctx.fillText('✓', x + cellWidth - 10, y + 15);
+                        if (grid[row][col] !== '') {
+                            // Vẽ cell có số
+                            ctx.fillStyle = isMarked ? '#e74c3c' : '#3498db';
+                            ctx.fillRect(x, y, cellWidth, cellHeight);
+                            
+                            // Border
+                            ctx.strokeStyle = '#2c3e50';
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(x, y, cellWidth, cellHeight);
+                            
+                            // Số
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 18px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(grid[row][col], x + cellWidth/2, y + cellHeight/2 + 6);
+                            
+                            // Đánh dấu nếu được chọn
+                            if (isMarked) {
+                                ctx.fillStyle = '#f1c40f';
+                                ctx.font = 'bold 12px Arial';
+                                ctx.fillText('✓', x + cellWidth - 10, y + 15);
+                            }
+                        } else {
+                            // Vẽ cell trống
+                            ctx.fillStyle = '#ecf0f1';
+                            ctx.fillRect(x, y, cellWidth, cellHeight);
+                            ctx.strokeStyle = '#bdc3c7';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(x, y, cellWidth, cellHeight);
                         }
-                    } else {
-                        // Vẽ cell trống
-                        ctx.fillStyle = '#ecf0f1';
-                        ctx.fillRect(x, y, cellWidth, cellHeight);
-                        ctx.strokeStyle = '#bdc3c7';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(x, y, cellWidth, cellHeight);
                     }
                 }
             }
@@ -726,13 +778,13 @@
             ctx.fillStyle = '#7f8c8d';
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('🍀 Good luck! - BD/DAD-DEN1', 450, 645);
+            ctx.fillText('🍀 Good luck! - BD/DAD-DEN1', 450, 745);
             
             // Marked count
             ctx.fillStyle = '#e74c3c';
             ctx.font = 'bold 12px Arial';
             ctx.textAlign = 'left';
-            ctx.fillText(`Marked: ${markedCells.size} numbers`, 40, 670);
+            ctx.fillText(`Marked: ${markedCells.size} numbers`, 40, 770);
             
             // Download image
             const link = document.createElement('a');
@@ -749,18 +801,26 @@
             
             const markedNumbers = [];
             markedCells.forEach(cellId => {
-                const [row, col] = cellId.split('-').slice(1).map(Number);
-                if (currentTicketData[row] && currentTicketData[row][col] !== '') {
-                    markedNumbers.push(currentTicketData[row][col]);
+                const parts = cellId.split('-');
+                const gridIndex = parseInt(parts[1]);
+                const row = parseInt(parts[2]);
+                const col = parseInt(parts[3]);
+                
+                if (currentTicketData[gridIndex] && currentTicketData[gridIndex][row] && 
+                    currentTicketData[gridIndex][row][col] !== '') {
+                    markedNumbers.push(currentTicketData[gridIndex][row][col]);
                 }
             });
             
             const ticketText = `LÔTÔ BINGO - TICKET #${ticketCounter.toString().padStart(3, '0')}\n` +
                 `Date: ${new Date().toLocaleDateString('en-US')}\n\n` +
                 `Numbers in ticket:\n` +
-                currentTicketData.map(row => 
-                    row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
-                ).join('\n') + 
+                currentTicketData.map((grid, gridIndex) => 
+                    `Grid ${gridIndex + 1}:\n` +
+                    grid.map(row => 
+                        row.map(cell => cell === '' ? '⬜' : cell.toString().padStart(2, '0')).join(' ')
+                    ).join('\n')
+                ).join('\n\n') + 
                 `\n\nMarked: ${markedNumbers.sort((a, b) => a - b).join(', ')}\n` +
                 `\n🍀 Good luck!`;
             
