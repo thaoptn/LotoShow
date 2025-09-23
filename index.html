@@ -58,7 +58,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             animation: shimmer 3s infinite;
         }
         
@@ -210,7 +210,7 @@
         .loto-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            grid-template-rows: repeat(3, 1fr);
+            grid-template-rows: repeat(6, 1fr);
             gap: 3px;
             background: #34495e;
             border-radius: 10px;
@@ -247,7 +247,7 @@
         .loto-cell.filled.marked {
             background: linear-gradient(145deg, #952231, #e5bde2);
             color: white;
-            transform: scale(1.05);
+            transform: scale(1);
             box-shadow: 0 3px 15px rgba(231, 76, 60, 0.5);
             position: relative;
         }
@@ -388,8 +388,8 @@
             }
             
             .loto-cell {
-                height: 35px;
-                font-size: 14px;
+                height: 30px;
+                font-size: 12px;
             }
             
             .column-label {
@@ -418,7 +418,7 @@
                 <h3>📋 Instruction:</h3>
                 <ul>
                     <li>Click "Get LÔTÔ Ticket" button to create new ticket</li>
-                    <li>Each ticket contains 15 numbers from 1 to 90, divided into 9 columns</li>
+                    <li>Each ticket contains 30 numbers from 1 to 90, divided into 9 columns</li>
                     <li>Each row has exactly 5 numbers and  blank cells</li>
                     <li><strong>Click on a number cell to mark it</strong></li>
                     <li>Save an image of the ticket to compare with the results later</li>
@@ -478,13 +478,13 @@
     </div>
 
     <script>
-       let ticketCounter = 0;
+      let ticketCounter = 0;
         let currentTicketData = null;
         let markedCells = new Set();
 
         function generateLotoTicket() {
-            // Tạo lưới 3 hàng x 9 cột
-            const grid = Array(3).fill(null).map(() => Array(9).fill(''));
+            // Tạo lưới 6 hàng x 9 cột
+            const grid = Array(6).fill(null).map(() => Array(9).fill(''));
             
             // Phạm vi số cho mỗi cột (1-10, 11-20, ..., 81-90)
             const columnRanges = [
@@ -495,7 +495,7 @@
             const usedNumbers = new Set();
             
             // Mỗi hàng phải có đúng 5 số
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 6; row++) {
                 const availableColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8];
                 const selectedColumns = [];
                 
@@ -521,7 +521,7 @@
             // Sắp xếp số trong mỗi cột theo thứ tự tăng dần
             for (let col = 0; col < 9; col++) {
                 const columnNumbers = [];
-                for (let row = 0; row < 3; row++) {
+                for (let row = 0; row < 6; row++) {
                     if (grid[row][col] !== '') {
                         columnNumbers.push(grid[row][col]);
                     }
@@ -529,7 +529,7 @@
                 columnNumbers.sort((a, b) => a - b);
                 
                 let numIndex = 0;
-                for (let row = 0; row < 3; row++) {
+                for (let row = 0; row < 6; row++) {
                     if (grid[row][col] !== '') {
                         grid[row][col] = columnNumbers[numIndex++];
                     }
@@ -545,7 +545,7 @@
             markedCells.clear();
             updateMarkedCount();
             
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 6; row++) {
                 for (let col = 0; col < 9; col++) {
                     const cell = document.createElement('div');
                     const cellId = `cell-${row}-${col}`;
@@ -644,19 +644,19 @@
             
             // Kích thước canvas
             canvas.width = 900;
-            canvas.height = 500;
+            canvas.height = 700;
             
             // Background gradient
-            const gradient = ctx.createLinearGradient(0, 0, 900, 500);
+            const gradient = ctx.createLinearGradient(0, 0, 900, 700);
             gradient.addColorStop(0, '#ffffff');
             gradient.addColorStop(1, '#f8f9fa');
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 900, 500);
+            ctx.fillRect(0, 0, 900, 700);
             
             // Border
             ctx.strokeStyle = '#353983';
             ctx.lineWidth = 6;
-            ctx.strokeRect(10, 10, 880, 480);
+            ctx.strokeRect(10, 10, 880, 680);
             
             // Header
             ctx.fillStyle = '#e74c3c';
@@ -682,7 +682,7 @@
             const startX = 40;
             const startY = 150;
             
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 6; row++) {
                 for (let col = 0; col < 9; col++) {
                     const x = startX + col * 85;
                     const y = startY + row * 60;
@@ -726,13 +726,13 @@
             ctx.fillStyle = '#7f8c8d';
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('🍀 Good luck! - BD/DAD-DEN1', 450, 445);
+            ctx.fillText('🍀 Good luck! - BD/DAD-DEN1', 450, 645);
             
             // Marked count
             ctx.fillStyle = '#e74c3c';
             ctx.font = 'bold 12px Arial';
             ctx.textAlign = 'left';
-            ctx.fillText(`Marked: ${markedCells.size} numbers`, 40, 470);
+            ctx.fillText(`Marked: ${markedCells.size} numbers`, 40, 670);
             
             // Download image
             const link = document.createElement('a');
